@@ -121,6 +121,8 @@
     content: '';
     position: absolute;
     inset: 0;
+    /* allow clicks to pass through the decorative overlay */
+    pointer-events: none;
     background-image: repeating-linear-gradient(
       0deg,
       transparent,
@@ -135,7 +137,7 @@
       rgba(255,255,255,0.015) 80px
     );
   }
-  .hero > * { position: relative; }
+  .hero > * { position: relative; z-index: 1; }
 
   .urgent-eyebrow {
     display: inline-flex;
