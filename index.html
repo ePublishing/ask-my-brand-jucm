@@ -266,6 +266,11 @@
     gap: 7px;
     font-family: var(--ui-font);
     white-space: nowrap;
+    /* allow users to select and copy prompt text */
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
   }
   .prompt-chip:hover {
     background: rgba(255,255,255,0.15);
