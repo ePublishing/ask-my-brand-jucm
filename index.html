@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ask JUCM – AI Search | Journal of Urgent Care Medicine</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #1a2a4a;
+    --navy-mid: #243660;
+    --red: #cc2222;
+    --red-light: #f5e6e6;
+    --white: #ffffff;
+    --gray-light: #f5f6f8;
+    --gray-mid: #e2e5ea;
+    --gray-text: #6b7280;
+    --gray-dark: #374151;
+    --body-font: Georgia, 'Times New Roman', serif;
+    --ui-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  body {
+    font-family: var(--ui-font);
+    background: var(--gray-light);
+    color: var(--gray-dark);
+    min-height: 100vh;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--navy);
+    color: rgba(255,255,255,0.65);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-align: center;
+    padding: 6px 16px;
+  }
+  .topbar a { color: rgba(255,255,255,0.8); text-decoration: none; }
+  .topbar a:hover { color: #fff; }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--white);
+    border-bottom: 3px solid var(--red);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .logo-block {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+  }
+  .logo-img {
+    height: 44px;
+    width: auto;
+  }
+  .logo-divider {
+    width: 1px;
+    height: 36px;
+    background: var(--gray-mid);
+  }
+  .logo-label {
+    font-family: var(--ui-font);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--navy);
+    line-height: 1.3;
+  }
+  .logo-label span {
+    display: block;
+    color: var(--red);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+  .header-nav {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .header-nav a {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--navy);
+    text-decoration: none;
+    padding: 4px 0;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .header-nav a:hover { color: var(--red); border-color: var(--red); }
+  .header-nav .btn-sub {
+    background: var(--navy);
+    color: white;
+    padding: 7px 16px;
+    border-radius: 3px;
+    border-bottom: none;
+    font-size: 11px;
+    transition: background 0.15s;
+  }
+  .header-nav .btn-sub:hover { background: var(--red); color: white; }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--navy);
+    background-image: linear-gradient(135deg, #1a2a4a 0%, #243660 60%, #1e3050 100%);
+    padding: 64px 24px 72px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 39px,
+      rgba(255,255,255,0.025) 39px,
+      rgba(255,255,255,0.025) 40px
+    ), repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 79px,
+      rgba(255,255,255,0.015) 79px,
+      rgba(255,255,255,0.015) 80px
+    );
+  }
+  .hero > * { position: relative; }
+
+  .urgent-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--red);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 2px;
+    margin-bottom: 22px;
+  }
+  .urgent-eyebrow::before {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.8);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero h1 {
+    font-family: var(--body-font);
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.18;
+    max-width: 680px;
+    margin: 0 auto 14px;
+    letter-spacing: -0.01em;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: #7eb3e8;
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.65);
+    max-width: 520px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+  }
+
+  /* ── SEARCH WIDGET SLOT ── */
+  .search-slot {
+    background: white;
+    border-radius: 6px;
+    max-width: 680px;
+    margin: 0 auto 36px;
+    padding: 32px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.25), 0 2px 8px rgba(0,0,0,0.15);
+    text-align: left;
+  }
+  .search-slot-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .search-slot-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray-mid);
+  }
+
+  /* Paste your widget here — this placeholder shows where it goes */
+  .widget-placeholder {
+    border: 2px dashed var(--gray-mid);
+    border-radius: 4px;
+    padding: 28px 20px;
+    text-align: center;
+    color: var(--gray-text);
+    font-size: 13px;
+    background: var(--gray-light);
+  }
+  .widget-placeholder strong {
+    display: block;
+    font-size: 14px;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+
+  /* ── SAMPLE PROMPTS ── */
+  .prompts-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 14px;
+  }
+  .prompts-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+  .prompt-chip {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 100px;
+    padding: 8px 18px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--ui-font);
+    white-space: nowrap;
+  }
+  .prompt-chip:hover {
+    background: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.4);
+    color: white;
+    transform: translateY(-1px);
+  }
+  .prompt-chip svg {
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+
+  /* ── FEATURE STRIP ── */
+  .feature-strip {
+    background: white;
+    border-top: 1px solid var(--gray-mid);
+    border-bottom: 1px solid var(--gray-mid);
+    padding: 28px 32px;
+  }
+  .feature-strip-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    flex: 1;
+    min-width: 200px;
+  }
+  .feature-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--red-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .feature-icon svg { color: var(--red); }
+  .feature-text strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 2px;
+  }
+  .feature-text span {
+    font-size: 12px;
+    color: var(--gray-text);
+    line-height: 1.4;
+  }
+
+  /* ── ABOUT SECTION ── */
+  .about-section {
+    max-width: 860px;
+    margin: 48px auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  .about-card {
+    background: white;
+    border: 1px solid var(--gray-mid);
+    border-top: 3px solid var(--navy);
+    border-radius: 4px;
+    padding: 28px;
+  }
+  .about-card h2 {
+    font-family: var(--body-font);
+    font-size: 20px;
+    color: var(--navy);
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+  .about-card p {
+    font-size: 14px;
+    color: var(--gray-text);
+    line-height: 1.7;
+  }
+  .about-card .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 16px;
+  }
+  .tag {
+    background: var(--gray-light);
+    border: 1px solid var(--gray-mid);
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--navy);
+    padding: 4px 10px;
+  }
+  .about-card.disclaimer {
+    border-top-color: var(--red);
+    background: var(--red-light);
+  }
+  .about-card.disclaimer h2 { font-size: 16px; color: var(--red); }
+  .about-card.disclaimer p { font-size: 13px; color: #7a2222; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 24px 16px;
+    font-size: 12px;
+    border-top: 3px solid var(--red);
+  }
+  footer a { color: rgba(255,255,255,0.7); text-decoration: none; }
+  footer a:hover { color: white; }
+  footer .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  @media (max-width: 640px) {
+    header { flex-direction: column; align-items: flex-start; padding: 12px 16px; }
+    .header-nav { flex-wrap: wrap; gap: 12px; }
+    .about-section { grid-template-columns: 1fr; }
+    .hero { padding: 40px 16px 52px; }
+    .search-slot { padding: 20px 16px; }
+    .prompt-chip { font-size: 12px; padding: 7px 14px; }
+    .feature-item { min-width: 160px; }
+  }
+  /* ── PASSWORD PROTECTION ── */
+  .password-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(-45deg,var(--navy),var(--navy-mid),#2a5080,var(--red));background-size:400% 400%;animation:gradientShift 15s ease infinite;z-index:10000;display:flex;align-items:center;justify-content:center}
+  @keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  .password-box{background:rgba(255,255,255,.98);padding:36px;border-radius:12px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.35);max-width:420px;width:92%}
+  .password-box h2{font-family:var(--body-font);font-size:1.25rem;color:var(--navy);margin-bottom:.5rem}
+  .password-box p{color:var(--gray-text);margin-bottom:1rem;font-size:.9rem}
+  .password-box input{width:100%;padding:.75rem 1rem;border:2px solid var(--gray-mid);border-radius:6px;font-size:1rem;font-family:var(--ui-font);margin-bottom:.75rem;outline:none}
+  .password-box input:focus{border-color:var(--navy)}
+  .password-box button{width:100%;padding:.75rem 1rem;background:var(--navy);color:var(--white);border:none;border-radius:6px;font-size:1rem;font-weight:700;cursor:pointer}
+  .password-box button:hover{background:var(--navy-mid)}
+  .password-box .error{color:var(--red);font-size:.85rem;margin-top:.75rem;display:none}
+  .page-content{display:none}
+  .page-content.unlocked{display:block}
+
+</style>
+</head>
+<body>
+
+<div class="password-overlay" id="passwordOverlay">
+  <div class="password-box">
+    <h2>Ask JUCM</h2>
+    <p>Please enter the password to view this demo.</p>
+    <input type="password" id="passwordInput" placeholder="Enter password" onkeypress="if(event.key==='Enter')checkPassword()"/>
+    <button onclick="checkPassword()">Access Demo</button>
+    <p class="error" id="errorMsg">Incorrect password. Please try again.</p>
+  </div>
+</div>
+
+<div class="page-content" id="pageContent">
+
+<!-- TOP BAR -->
+<div class="topbar">
+  The Official Journal of the Urgent Care Association (UCA) &nbsp;·&nbsp;
+  <a href="https://www.jucm.com/subscribe/">Subscribe</a> &nbsp;·&nbsp;
+  <a href="https://www.jucm.com/archives/">Archives</a>
+</div>
+
+<!-- HEADER -->
+<header>
+  <a class="logo-block" href="https://www.jucm.com/">
+    <img class="logo-img" src="https://www.jucm.com/wp-content/uploads/2018/04/logo.png" alt="JUCM Logo">
+    <div class="logo-divider"></div>
+    <div class="logo-label">
+      AI Search
+      <span>Powered by Ask My Brand</span>
+    </div>
+  </a>
+  <nav class="header-nav">
+    <a href="https://www.jucm.com/clinical/">Clinical</a>
+    <a href="https://www.jucm.com/practice-management/">Practice Mgmt</a>
+    <a href="https://www.jucm.com/original-research/">Research</a>
+    <a href="https://www.jucm.com/news/">News</a>
+    <a href="https://www.jucm.com/subscribe/" class="btn-sub">Subscribe</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="urgent-eyebrow">Urgent Intelligence</div>
+  <h1>Search <em>20 years</em> of urgent care expertise. Instantly.</h1>
+  <p class="hero-sub">Ask clinical, practice management, or research questions across the full JUCM library — peer-reviewed answers from the journal built for urgent care.</p>
+
+  <!-- SEARCH WIDGET -->
+  <div class="search-slot">
+    <div class="search-slot-label">Ask JUCM</div>
+    <!-- ✏️ PASTE YOUR SEARCH WIDGET EMBED CODE HERE -->
+    <div class="widget-placeholder">
+      <strong>Search Widget Goes Here</strong>
+      Replace this block with your Ask My Brand embed code
+    </div>
+    <!-- END WIDGET -->
+  </div>
+
+  <!-- SAMPLE PROMPTS -->
+  <p class="prompts-label">Try asking…</p>
+  <div class="prompts-grid">
+    <button class="prompt-chip">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Pediatric asthma management in urgent care
+    </button>
+    <button class="prompt-chip">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Antibiotic stewardship for lacerations
+    </button>
+    <button class="prompt-chip">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Who can take X-rays in urgent care by state?
+    </button>
+    <button class="prompt-chip">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Revenue cycle coding denials and compliance
+    </button>
+    <button class="prompt-chip">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Occupational medicine in urgent care operations
+    </button>
+    <button class="prompt-chip">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      STI testing protocols and urgent care
+    </button>
+    <button class="prompt-chip">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Shortness of breath differential in urgent care
+    </button>
+    <button class="prompt-chip">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      AI documentation tools and coding risk
+    </button>
+  </div>
+</section>
+
+<!-- FEATURE STRIP -->
+<div class="feature-strip">
+  <div class="feature-strip-inner">
+    <div class="feature-item">
+      <div class="feature-icon">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="feature-text">
+        <strong>Peer-Reviewed Content</strong>
+        <span>Clinical and practice management articles vetted by UC specialists</span>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      </div>
+      <div class="feature-text">
+        <strong>20 Years of Archives</strong>
+        <span>Search the complete JUCM library going back to the journal's founding</span>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+      </div>
+      <div class="feature-text">
+        <strong>Cites the Source</strong>
+        <span>Every AI answer links directly to the original JUCM article</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT CARDS -->
+<div class="about-section">
+  <div class="about-card">
+    <h2>What can you ask?</h2>
+    <p>Ask My Brand searches across JUCM's full content library — clinical articles, case reports, original research, practice management, revenue cycle, and more. Get direct answers grounded in the journal's peer-reviewed content.</p>
+    <div class="tag-list">
+      <span class="tag">Clinical</span>
+      <span class="tag">Case Reports</span>
+      <span class="tag">Research</span>
+      <span class="tag">Practice Mgmt</span>
+      <span class="tag">Revenue Cycle</span>
+      <span class="tag">Health Law</span>
+      <span class="tag">Occ Med</span>
+    </div>
+  </div>
+  <div class="about-card disclaimer">
+    <h2>⚠ Clinical Disclaimer</h2>
+    <p>This tool is intended for educational and informational purposes for healthcare professionals. It does not constitute medical advice and should not replace clinical judgment. Always consult current guidelines and institutional protocols when making patient care decisions.</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-links">
+    <a href="https://www.jucm.com/about-us/">About JUCM</a>
+    <a href="https://www.jucm.com/subscribe/">Subscribe</a>
+    <a href="https://www.jucm.com/archives/">Archives</a>
+    <a href="https://www.jucm.com/advertise/">Advertise</a>
+    <a href="https://www.jucm.com/contact-us/">Contact</a>
+    <a href="https://www.jucm.com/author-instructions/">Submit an Article</a>
+  </div>
+  <p>©2026 The Journal of Urgent Care Medicine · Official Journal of the Urgent Care Association</p>
+</footer>
+
+</div><!-- end page-content -->
+
+<script>
+function checkPassword(){
+  const password = document.getElementById('passwordInput').value;
+  const correctPassword = 'increaserevenue2026';
+  if(password === correctPassword){
+    document.getElementById('passwordOverlay').style.display = 'none';
+    document.getElementById('pageContent').classList.add('unlocked');
+    sessionStorage.setItem('demoAccess','granted');
+  } else {
+    document.getElementById('errorMsg').style.display = 'block';
+    document.getElementById('passwordInput').value = '';
+  }
+}
+if(sessionStorage.getItem('demoAccess') === 'granted'){
+  document.getElementById('passwordOverlay').style.display = 'none';
+  document.getElementById('pageContent').classList.add('unlocked');
+}
+</script>
+
+</body>
+</html>
